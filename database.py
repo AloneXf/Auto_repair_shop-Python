@@ -1,81 +1,4 @@
-from datetime import date
-from datetime import datetime
-
-#Funções de validação e entrada de dados:
-
-def pedir_nome():
-    while True:
-        nome = input("Digite o nome do cliente: ").strip()
-        if nome.lower() == "sair":
-            return "sair"
-        elif not nome:
-            print("Não deixe esse campo vazio. ")
-            continue
-        return nome
-def pedir_telefone():
-    while True:
-        telefone = input("Contato do cliente: ").strip()
-        if telefone.lower() == "sair":
-            return "sair"
-        elif telefone == "":
-            return None
-        elif not telefone.isdigit():
-            print("Digite apenas números. ")
-            continue
-        return telefone
-def pedir_moto():
-    while True:
-        moto = input("Modelo da moto: ").strip()
-        if moto.lower() == "sair":
-            return "sair"
-        elif not moto:
-            print("É necessário preencher este campo. ")
-            continue
-        return moto
-def pedir_manutencao():
-    while True:     
-        manutencao = input("Manutenção feita: ").strip()
-        if manutencao.lower() == "sair":
-            return "sair"
-        elif not manutencao:
-            print("É necessário preencher este campo. ")
-            continue
-        return manutencao
-def pedir_data():
-    while True:
-        try:
-            dia = (input("Qual o dia? ")).strip().lower()
-            if dia == "sair":
-                return "sair"
-            mes = (input("Qual o mês? ")).strip().lower()
-            if mes == "sair":
-                return "sair"
-            ano = (input("Qual o ano? ")).strip().lower()
-            if ano == "sair":
-                return "sair"
-            data = date(int(ano), int(mes), int(dia))
-            return data
-        except ValueError:
-            print("Data inválida.")          
-def padronizar_data(data):
-    formatos = ["%Y-%m-%d", "%d/%m/%Y"]
-    for formato in formatos:
-        try:
-            data_convertida = datetime.strptime(data, formato)
-            return data_convertida.strftime("%d/%m/%Y")
-        except ValueError:
-            continue
-
-    return data
-def input_inteiro():
-    while True:
-        try:
-            numero = input("Qual? ").strip().lower()
-            if numero == "sair":
-                return "sair"
-            return int(numero)
-        except ValueError:
-            print("Digite apenas números.")
+from validacoes import (pedir_nome, pedir_telefone, pedir_moto, pedir_manutencao, pedir_data, padronizar_data, input_inteiro)
 
 #Funções base da DataBase:
 
@@ -104,7 +27,7 @@ def deletar_dados(cursor): #Deletar os dados de um cliente especifico.
     else:
         print("ID não encontrado.")
         
-def input_dados(cursor): #Adicionar novo cliente no banco de dados.
+def input_dados(cursor): #Adicionar novo cliente ao banco de dados.
     nome = pedir_nome()
     if nome == "sair":
         return "sair"
@@ -206,42 +129,81 @@ Qual informação quer mudar? """).strip()
     """, (novo_valor, id_cliente))
     if cursor.rowcount > 0:
         print("Dados atualizados.")
-    
-def pesquisa_coluna(cursor): #Pesquisa uma coluna individualmente e mostra todos os elementos dentro dela.
-    colunas_validas = {
+
+def buscar_dados(cursor): #Realiza personalizadas na database.
+    opcao = {
     "1": "nome",
     "2": "telefone",
     "3": "moto",
     "4": "manutencao",
-    "5": "data"
+    "5": "data",
+    "6": "id" 
     }
     while True:
-        selecao_dado = input("""
+        qual_coluna = input("""
 1-Nome
 2-Telefone
 3-Moto
 4-Manutenção
 5-Data
+6-ID
 
-Qual coluna quer ver? """).lower().strip()
-        if selecao_dado == "sair":
+Qual informação quer buscar? """).strip().lower()
+        if qual_coluna == "sair":
             return "sair"
-        elif selecao_dado in colunas_validas:
-            coluna = colunas_validas[selecao_dado]
-            cursor.execute(f"""
-                SELECT {coluna} FROM clientes
-                """)
-            break
-        else:
-            print("Digite uma coluna válida.")
-    visualizar = cursor.fetchall()
-    if not visualizar:
-        print("Coluna não encontrada.")
-        return  
-    for dado in visualizar:
-        valor = dado[0]
-        if valor is None:
-            valor = ""
-        if coluna == "data":
-            valor = padronizar_data(valor)
-        print(valor)
+        if qual_coluna not in opcao:
+            print("Opção inválida.")
+            continue
+        coluna = opcao[qual_coluna]
+        while True:
+            if coluna == "id":
+                busca = input("Qual buscar? ").strip().lower()
+                if busca == "sair":
+                    return "sair" 
+                if not busca:
+                    print("Preencha este campo.")
+                    continue
+                try:
+                    cursor.execute("""
+                    SELECT * FROM clientes
+                    WHERE id = ?
+                    """, (int(busca),))
+                    visualizar = cursor.fetchall()
+                    break
+                except ValueError:
+                    print("Digite um ID válido.")
+            elif coluna == "data":
+                busca = pedir_data()
+                if busca == "sair":
+                    return "sair"
+                busca = busca.isoformat()
+                cursor.execute("""
+                SELECT * FROM clientes
+                WHERE data = ?
+                """, (busca,)) 
+                visualizar = cursor.fetchall()
+                break
+            else:
+                busca = input("Qual buscar? ").strip().lower()
+                if busca == "sair":
+                    return "sair" 
+                if not busca:
+                    print("Preencha este campo.")
+                    continue
+                busca = f"%{busca}%"
+                cursor.execute(f"""
+                SELECT * FROM clientes
+                WHERE {coluna} like ?           
+                """, (busca,))
+                visualizar = cursor.fetchall()
+                break
+        if not visualizar:
+            print("Nenhum resultado encontrado.")
+            return
+        print(f"| {'ID': <20} |", f"| {'NOME': <20} |",f"| {'TELEFONE': <20} |", f"| {'MOTO': <20} |", f"| {'MANUTENÇÃO': <20} |", f"| {'DATA': <20} |")
+        print ("=" * 149)
+        for cliente in visualizar:
+            telefone = cliente[2] if cliente[2] is not None else ""
+            data_formatada = padronizar_data(cliente[5])
+            print(f"| {cliente[0]: <20} |",f"| {cliente[1]: <20} |",f"| {telefone: <20} |", f"| {cliente[3]: <20} |", f"| {cliente[4]: <20} |", f"| {data_formatada: <20} |")
+        return
