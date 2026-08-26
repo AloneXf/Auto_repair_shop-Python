@@ -1,21 +1,25 @@
-v0.2.0
-├── validacoes.py separado
-├── responsabilidades dos módulos melhores
-├── main() + if __name__ == "__main__"
-├── menu mais organizado
-├── busca unificada
-├── busca parcial com LIKE
-├── busca exata de ID
-├── busca e validação de data
-└── melhor tratamento de entradas
+### v0.1.0
 
-v0.2.0 — current
-├── validacoes.py separated
-├── improved module responsibilities
-├── main() + if __name__ == "__main__"`
-├── more organized menu
-├── unified search
-├── partial search using `LIKE`
-├── exact ID search
-├── date search and validation
-└── improved input handling
+* Functional terminal-based CRUD
+* SQLite using `oficina.db`
+* Customer registration
+* View by ID or view all
+* Data modification
+* Deletion by ID
+* Simple column-based search
+* Validation for name, phone, ID, and date
+* Date formatting
+* Support for exiting during operations
+* Main menu in `main.py`
+
+### v0.2.0
+
+* Separated `validacoes.py`
+* Improved module responsibilities
+* `main()` + `if __name__ == "__main__"`
+* More organized menu
+* Unified search
+* Partial search using `LIKE`
+* Exact ID search
+* Date search and validation
+* Improved input handling
