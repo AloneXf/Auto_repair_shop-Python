@@ -1,34 +1,32 @@
 import sqlite3
-from database import (criar_tabela, input_dados, ver_dados, mudar_dados, deletar_dados, buscar_dados)
+from database import (criar_tabelas, cadastro, alterar_dados, deletar_dados, pesquisar)
 
 def main():
     conexao = sqlite3.connect("oficina.db")
     cursor = conexao.cursor()
 
-    criar_tabela(cursor) #Garante que a tabela exista.
+    criar_tabelas(cursor) #Garante que a tabela exista.
     conexao.commit()
 
     selecao_opcao = {
-    "1": input_dados,
-    "2": ver_dados,
-    "3": mudar_dados,
-    "4": deletar_dados,
-    "6": buscar_dados}
-    
-    
+    "1": cadastro,
+    "2": alterar_dados,
+    "3": deletar_dados,
+    "4": pesquisar
+
+    }
     
     try:
         while True:
             opcao = input("""
-    1-Inserir
-    2-Ver
-    3-Mudar
-    4-Deletar
-    5-Sair
-    6-Pesquisar
+0-Fechar programa
+1-Cadastrar
+2-Alterar
+3-Deletar
+4-Consultar
 
-    O que deseja fazer? """).strip()                                                                                          
-            if opcao == "5":
+O que deseja fazer? """).strip()                                                                                          
+            if opcao == "0":
                 break
             elif opcao in selecao_opcao:
                 resultado = selecao_opcao[opcao](cursor)
