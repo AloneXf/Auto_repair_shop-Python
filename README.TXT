@@ -1,25 +1,33 @@
-### v0.1.0
+v0.1.0
+├── Functional CRUD
+├── SQLite
+├── main.py + database.py
+├── Validations
+├── Exit system
+└── Simple column-based search
 
-* Functional terminal-based CRUD
-* SQLite using `oficina.db`
-* Customer registration
-* View by ID or view all
-* Data modification
-* Deletion by ID
-* Simple column-based search
-* Validation for name, phone, ID, and date
-* Date formatting
-* Support for exiting during operations
-* Main menu in `main.py`
+v0.2.0
+├── `validacoes.py` separated
+├── improved module responsibilities
+├── `main()` + `if __name__ == "__main__"`
+├── more organized menu
+├── unified search
+├── partial search using `LIKE`
+├── exact ID search
+├── date search and validation
+└── improved input handling
 
-### v0.2.0
-
-* Separated `validacoes.py`
-* Improved module responsibilities
-* `main()` + `if __name__ == "__main__"`
-* More organized menu
-* Unified search
-* Partial search using `LIKE`
-* Exact ID search
-* Date search and validation
-* Improved input handling
+v0.3.0 — current
+├── Relational database structure
+├── `clientes`, `motos` and `manutencoes` tables
+├── Foreign key relationships
+├── Full relational CRUD
+├── SQL `JOIN` and `LEFT JOIN`
+├── Maintenance history
+├── Search across related tables
+├── Client, motorcycle and maintenance editing
+├── Relational deletion with integrity protection
+├── `tabelas.py` separated for data visualization
+├── Improved table formatting
+├── Standardized date storage and display
+└── Improved menu and exit flow
