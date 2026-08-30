@@ -1,41 +1,41 @@
-import sqlite3
-from database import (criar_tabelas, cadastro, alterar_dados, deletar_dados, pesquisar)
+import sqlite3 as sq
+import core
+import terminal
 
 def main():
-    conexao = sqlite3.connect("oficina.db")
+    conexao = sq.connect("oficina.db")
     cursor = conexao.cursor()
-
-    criar_tabelas(cursor) #Garante que a tabela exista.
-    conexao.commit()
-
-    selecao_opcao = {
-    "1": cadastro,
-    "2": alterar_dados,
-    "3": deletar_dados,
-    "4": pesquisar
-
-    }
-    
     try:
+        core.criar_tabelas(cursor)
+        conexao.commit()
+        opcoes = {
+            "1": terminal.cadastro,
+            "2": terminal.alterar_dados,
+            "3": terminal.deletar_dados,
+            "4": terminal.pesquisar,
+            "5": terminal.resumo
+        }
         while True:
-            opcao = input("""
-0-Fechar programa
-1-Cadastrar
-2-Alterar
-3-Deletar
-4-Consultar
-
-O que deseja fazer? """).strip()                                                                                          
-            if opcao == "0":
+            print()
+            escolha = input("1-Cadastrar\n2-Alterar\n3-Excluir\n4-Pesquisar\n5-Resumo\n0-Sair\nO que deseja fazer?").strip().lower()
+            if escolha in ("0", "sair"):
                 break
-            elif opcao in selecao_opcao:
-                resultado = selecao_opcao[opcao](cursor)
+            if escolha not in opcoes:
+                print("Opção inválida.")
+                continue
+            try:
+                resultado = opcoes[escolha](cursor)
                 if resultado == "sair":
+                    conexao.rollback()
                     break
-                conexao.commit()
-            else:
-                print("Insira apenas números válidos.")
+                if escolha in ("1", "2", "3"):
+                    conexao.commit()
+            except sq.Error as erro:
+                conexao.rollback()
+                print (f"Erro no banco de dados: {erro}")
     finally:
+        cursor.close()
         conexao.close()
+
 if __name__ == "__main__":
     main()
