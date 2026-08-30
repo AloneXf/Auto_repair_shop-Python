@@ -12,7 +12,7 @@ v0.4.0 — current
 ├── Centralized transaction control
 ├── Standardized terminal visualization
 
-v0.3.0 — current
+v0.3.0
 ├── Relational database structure
 ├── `clientes`, `motos` and `manutencoes` tables
 ├── Foreign key relationships
