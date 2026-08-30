@@ -31,3 +31,17 @@ v0.3.0 — current
 ├── Improved table formatting
 ├── Standardized date storage and display
 └── Improved menu and exit flow
+
+v0.4.0 — current
+├── Layered architecture
+├── `core.py`, `terminal.py`, `validations.py` and `view_terminal.py`
+├── Reusable core without terminal input/output
+├── Expanded motorcycle and maintenance data
+├── Plate validation and normalization
+├── Monetary values stored in cents
+├── Advanced combined filters
+├── Improved relational integrity handling
+├── Centralized transaction control
+├── Standardized terminal visualization
+├── Maintenance summary by period
+└── Architecture prepared for future GUI
